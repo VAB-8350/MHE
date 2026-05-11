@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ── Keyframes ── */
+  @keyframes mhe-fade-up {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes mhe-fade-right {
+    from { opacity: 0; transform: translateX(44px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes mhe-industry {
+    from { opacity: 0; transform: translateX(-48px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes mhe-expand-x {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* ── Hero: fire on page load ── */
+  .anim-hero-tag   { animation: mhe-fade-up    0.70s cubic-bezier(.22,.61,.36,1) 0.08s both; }
+  .anim-hero-sub   { animation: mhe-fade-up    0.70s cubic-bezier(.22,.61,.36,1) 0.22s both; }
+  .anim-hero-logo  { animation: mhe-fade-up    0.80s cubic-bezier(.22,.61,.36,1) 0.38s both; }
+  .anim-hero-desc  { animation: mhe-fade-up    0.70s cubic-bezier(.22,.61,.36,1) 0.56s both; }
+  .anim-hero-cta   { animation: mhe-fade-up    0.70s cubic-bezier(.22,.61,.36,1) 0.72s both; }
+  .anim-hero-panel { animation: mhe-fade-right 0.90s cubic-bezier(.22,.61,.36,1) 0.45s both; }
+  .anim-industry   { animation: mhe-industry   1.80s cubic-bezier(.22,.61,.36,1) 0.15s both; }
+
+  /* ── Scroll reveal: default (fade up) ── */
+  [data-anim] {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+    transition-delay: var(--anim-delay, 0ms);
+  }
+  [data-anim="right"] { transform: translateX(32px); }
+  [data-anim="fade"]  { transform: none; }
+
+  /* ── Scroll reveal: horizontal line expand ── */
+  [data-anim="expand-x"] {
+    opacity: 1;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.9s cubic-bezier(.22,.61,.36,1);
+    transition-delay: var(--anim-delay, 0ms);
+  }
+
+  /* ── Triggered state ── */
+  [data-anim].in-view {
+    opacity: 1;
+    transform: none;
+  }
+}
