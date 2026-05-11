@@ -172,7 +172,7 @@ const values = [
 	document.querySelectorAll('[data-anim]').forEach((el) => observer.observe(el));
 
 	
-	if (window.screen.width < 1024) {
+	if (window.screen.width >= 1024) {
 		const card = document.getElementById('branding-card');
 		const width = card?.clientWidth || 0;
 		const height = card?.clientHeight || 0;
