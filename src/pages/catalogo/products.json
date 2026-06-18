@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Producto 1",
+    "description": "Descripción del producto 1",
+    "price": 1000,
+    "image": "https://content.instyle.es/medio/2023/10/05/como-vestir-aesthetic-conjunto-de-cuadros-y-merceditas_f2c77189_231005162555_2000x3000.jpg",
+    "contact-link": "https://wa.me/123123123?text=Hola,%20me%20interesa%20consultar%20por%20el%20product%20x"
+  },
+  {
+    "name": "Producto 1",
+    "description": "Descripción del producto 1",
+    "price": 1000,
+    "image": "https://content.instyle.es/medio/2023/10/05/como-vestir-aesthetic-conjunto-de-cuadros-y-merceditas_f2c77189_231005162555_2000x3000.jpg",
+    "contact-link": "https://wa.me/123123123?text=Estoy%20interesado%20en%20el%20Producto%201"
+  },
+  {
+    "name": "Producto 1",
+    "description": "Descripción del producto 1",
+    "price": 1000,
+    "image": "https://content.instyle.es/medio/2023/10/05/como-vestir-aesthetic-conjunto-de-cuadros-y-merceditas_f2c77189_231005162555_2000x3000.jpg",
+    "contact-link": "https://wa.me/123123123?text=Estoy%20interesado%20en%20el%20Producto%201"
+  },
+  {
+    "name": "Producto 1",
+    "description": "Descripción del producto 1",
+    "price": 1000,
+    "image": "https://content.instyle.es/medio/2023/10/05/como-vestir-aesthetic-conjunto-de-cuadros-y-merceditas_f2c77189_231005162555_2000x3000.jpg",
+    "contact-link": "https://wa.me/123123123?text=Estoy%20interesado%20en%20el%20Producto%201"
+  }
+]

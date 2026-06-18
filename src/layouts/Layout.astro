@@ -37,5 +37,44 @@ const {
 	</head>
 	<body class="min-h-screen bg-[radial-gradient(circle_at_20%_-10%,#303434_0%,#0f1111_48%)] text-[#eceeee] font-['JetBrains_Mono'] antialiased selection:bg-[#eceeee] selection:text-[#333]">
 		<slot />
+		<script>
+			const observer = new IntersectionObserver(
+				(entries) =>
+					entries.forEach((e) => {
+						if (e.isIntersecting) {
+							e.target.classList.add('in-view');
+							observer.unobserve(e.target);
+						}
+					}),
+				{ threshold: 0.1, rootMargin: '0px 0px -52px 0px' }
+			);
+			document.querySelectorAll('[data-anim]').forEach((el) => observer.observe(el));
+
+			
+			if (window.innerWidth >= 1024) {
+				const card = document.getElementById('branding-card');
+				const width = card?.clientWidth || 0;
+				const height = card?.clientHeight || 0;
+				
+				card?.addEventListener('mousemove', (e) => {
+					const {layerX, layerY} = e;
+			
+					const yRotation = ((layerX - width / 2) / width) * 20; // Rango de rotación en Y
+					const xRotation = ((layerY - height / 2) / height) * 20; // Rango de rotación en X
+			
+					const string = `
+						perspective(1000px) 
+						scale(1.02) 
+						rotateX(${xRotation}deg) 
+						rotateY(${yRotation}deg)
+					`
+			
+					card.style.transform = string;
+				});
+				card?.addEventListener('mouseleave', () => {
+					card.style.transform = 'perspective(500px) scale(1) rotateX(0) rotateY(0)';
+				});
+			}
+		</script>
 	</body>
 </html>

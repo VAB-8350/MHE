@@ -1,0 +1,30 @@
+---
+const defaultNavItems = [
+  { name: 'Inicio', href: '/' },
+  { name: 'Catálogo', href: '/catalogo' },
+  { name: 'Dirección', blank: true, href: 'https://www.google.com/maps/place/MHE+indumentaria+Mayorista/@-33.1262169,-64.3419488,19z/data=!3m1!4b1!4m22!1m15!4m14!1m6!1m2!1s0x95d20008e1332ec5:0xb8896c87f6afadbb!2sV%C3%A9lez+Sarsfield+756,+X5800+R%C3%ADo+Cuarto,+C%C3%B3rdoba,+Argentina!2m2!1d-64.3413051!2d-33.126218!1m6!1m2!1s0x95d201002a9baa7d:0x8952ac237037d63e!2sMHE+indumentaria+Mayorista,+V%C3%A9lez+Sarsfield+756,+X5800+R%C3%ADo+Cuarto,+C%C3%B3rdoba!2m2!1d-64.3412952!2d-33.1261892!3m5!1s0x95d201002a9baa7d:0x8952ac237037d63e!8m2!3d-33.126218!4d-64.3413051!16s%2Fg%2F11zbqb0dn4?entry=ttu&g_ep=EgoyMDI2MDUyNy4wIKXMDSoASAFQAw%3D%3D' },
+]
+const props = Astro.props
+const { navItems = defaultNavItems } = props
+---
+<header class="sticky top-0 z-20 flex items-center justify-between border-b border-[#3a3e3e] bg-[rgb(10_12_12_/_82%)] px-[clamp(1.25rem,2.6vw,3.5rem)] py-[1.1rem] backdrop-blur-[10px]">
+  <div class="flex items-center gap-4">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/logos/MHE-08.svg" alt="MHE Logo" class="h-6 w-auto" />
+    </a>
+  </div>
+  <nav class="hidden gap-[clamp(0.6rem,1vw,1.8rem)] md:flex">
+    {
+      navItems.map((item :{ name: string, href: string, blank?: boolean }) => (
+        <a
+          href={item.href}
+          target={item.blank ? "_blank" : "_self"}
+          rel={item.blank ? "noopener noreferrer" : undefined}
+          class='border px-[0.5rem] py-[0.4rem] text-[0.74rem] tracking-[0.14em] transition duration-200 border-transparent text-[#b6b9b9] hover:border-[#eceeee] hover:text-[#eceeee]'
+        >
+          {item.name.toUpperCase()}
+        </a>
+      ))
+    }
+  </nav>
+</header>

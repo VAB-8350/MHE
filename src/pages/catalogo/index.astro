@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Header from '../../components/Header.astro'
+import Footer from '../../components/Footer.astro';
+
+import IconLayoutGrid from '@tabler/icons/outline/layout-grid.svg';
+import IconList from '@tabler/icons/outline/list.svg';
+import IconMessage from '@tabler/icons/outline/message.svg';
+
+import products from './products.json';
+---
+
+<Layout
+	title="MHE | Industria Textil Mayorista"
+	description="Landing de MHE: fabrica mayorista de indumentaria personalizada en Rio Cuarto."
+>
+  <Header />
+  <p class="mt-4 lg:mt-10 mb-4 max-w-7xl mx-auto px-4 text-[0.8rem] tracking-[0.1em] uppercase text-[#b6b9b9]">series 4 // factory direct</p>
+  <div class='max-w-7xl mx-auto flex justify-between lg:items-end px-4'>
+    <div>
+      <h1 class="text-3xl lg:text-6xl font-black font-['Montserrat'] uppercase anim-hero-tag">Catálogo</h1>
+    </div>
+
+    <div class="flex gap-2">
+      <button class="grid place-content-center w-10 lg:w-13 aspect-square p-0 border border-[#eceeee] text-[0.74rem] tracking-[0.14em] text-[#eceeee] uppercase transition hover:bg-[#eceeee]/20 cursor-pointer">
+        <IconLayoutGrid class="inline-block" />
+      </button>
+      <button class="grid place-content-center w-10 lg:w-13 aspect-square p-0 border border-[#eceeee] text-[0.74rem] tracking-[0.14em] text-[#eceeee] uppercase transition hover:bg-[#eceeee]/20 cursor-pointer">
+        <IconList class="inline-block" />
+      </button>
+    </div>
+  </div>
+
+  <main class="mt-10 max-w-7xl mx-auto px-4">
+    <div class='grid cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-20 mt-8'>
+      {
+        products.map((product) => (
+          <div class='flex flex-col relative' data-anim="fade">
+            <div class='overflow-hidden aspect-square mb-2'>
+              <img src={product.image} alt={product.name} class="w-full h-auto mb-4 aspect-square object-cover hover:scale-105 transition-transform duration-300">
+            </div>
+            <div>
+              <div class='flex items-center justify-between mb-1'>
+                <h2 class="text-xl font-black font-['Montserrat'] uppercase">{product.name}</h2>
+                <a href={product['contact-link']} target="_blank" class='px-2 transition-colors duration-200 cursor-pointer hover:text-[#eceeee] text-[#b6b9b9]' title="Consultar sobre este producto">
+                  <IconMessage class="inline-block" />
+                </a>
+              </div>
+              <p class="text-[#b6b9b9]">{product.description}</p>
+            </div>
+            <p class="absolute top-2 right-2 text-sm bg-[#222] px-2 py-1 text-white">${product.price} / 10u</p>
+          </div>
+        ))
+      }
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
