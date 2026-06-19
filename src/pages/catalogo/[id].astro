@@ -1,0 +1,74 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+import IconArrowLeft from '@tabler/icons/outline/arrow-left.svg';
+import IconBrandWhatsapp from '@tabler/icons/outline/brand-whatsapp.svg';
+
+import products from './products.json';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { id: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const whatsappUrl = `https://wa.me/123123123?text=${encodeURIComponent(`Hola, estoy interesado en el producto "${product.name}"`)}`;
+---
+
+<Layout
+  title={`MHE | ${product.name}`}
+  description={product.description}
+>
+  <Header />
+
+  <main class="max-w-7xl mx-auto px-4 pt-8 lg:pt-14 pb-16 lg:pb-24">
+    <a
+      id="catalog-back-link"
+      href="/catalogo"
+      data-fallback-href="/catalogo"
+      onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+      class="inline-flex items-center gap-2 border border-[#eceeee] px-4 py-2 text-[0.68rem] tracking-[0.12em] uppercase text-[#eceeee] transition hover:bg-[#eceeee]/20"
+    >
+      <IconArrowLeft class="inline-block" />
+      Volver al catálogo
+    </a>
+
+    <section class="mt-8 lg:mt-12 grid grid-cols-1 lg:grid-cols-9 gap-8 lg:gap-12">
+      <div class="lg:col-span-4 border border-[#2a2f2f] overflow-hidden justify-self-center">
+        <img transition:name={`product-image-${product.id}`} src={product.image} alt={product.name} class="w-auto h-[70vh] object-contain" />
+      </div>
+
+      <div class="lg:col-span-5">
+        <p class="text-[0.68rem] tracking-[0.12em] uppercase text-[#b6b9b9]">Serie 4 // ficha de producto</p>
+        <h1 transition:name={`product-title-${product.id}`} class="mt-3 text-3xl lg:text-5xl font-black font-['Montserrat'] uppercase leading-[0.95]">{product.name}</h1>
+
+        <div class="mt-6 border-y border-[#2a2f2f] py-4 flex items-center justify-between gap-4">
+          <p class="text-[#eceeee] font-['JetBrains_Mono'] text-sm uppercase tracking-[0.08em]">Precio mayorista</p>
+          <p class="text-lg font-['JetBrains_Mono'] text-[#eceeee]">${product.price} / 10u</p>
+        </div>
+
+        <p class="mt-6 text-sm lg:text-base text-[#b6b9b9] leading-relaxed font-['JetBrains_Mono']">{product.description}</p>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          {product.keywords.map((keyword: string) => (
+            <span class="px-3 py-1 border border-[#3a3f3f] text-[0.65rem] tracking-[0.1em] uppercase text-[#c4c7c8]">{keyword}</span>
+          ))}
+        </div>
+
+        <div class="mt-8 flex items-center gap-3">
+          <a href={whatsappUrl} target="_blank" class="inline-flex items-center gap-2 border border-[#eceeee] px-5 h-11 text-[0.68rem] tracking-[0.12em] uppercase text-[#eceeee] transition hover:bg-[#eceeee]/20">
+            <IconBrandWhatsapp class="inline-block text-green-500" />
+            Consultar por WhatsApp
+          </a>
+          <p class="text-[#8e9192] text-xs uppercase tracking-[0.08em]">Línea: {product.sexo === 'F' ? 'Femenino' : 'Masculino'}</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

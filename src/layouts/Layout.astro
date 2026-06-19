@@ -6,6 +6,7 @@ import '@fontsource/montserrat/900.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title?: string;
@@ -34,47 +35,82 @@ const {
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<title>{title}</title>
+		<ClientRouter />
 	</head>
 	<body class="min-h-screen bg-[radial-gradient(circle_at_20%_-10%,#303434_0%,#0f1111_48%)] text-[#eceeee] font-['JetBrains_Mono'] antialiased selection:bg-[#eceeee] selection:text-[#333]">
 		<slot />
 		<script>
-			const observer = new IntersectionObserver(
-				(entries) =>
-					entries.forEach((e) => {
-						if (e.isIntersecting) {
-							e.target.classList.add('in-view');
-							observer.unobserve(e.target);
-						}
-					}),
-				{ threshold: 0.1, rootMargin: '0px 0px -52px 0px' }
-			);
-			document.querySelectorAll('[data-anim]').forEach((el) => observer.observe(el));
+			let revealObserver;
+			let isClientNavigation = false;
 
-			
-			if (window.innerWidth >= 1024) {
+			const initScrollReveal = (skipAnimation = false) => {
+				revealObserver?.disconnect();
+
+				if (skipAnimation) {
+					document.querySelectorAll('[data-anim]').forEach((el) => el.classList.add('in-view'));
+					return;
+				}
+
+				revealObserver = new IntersectionObserver(
+					(entries) =>
+						entries.forEach((entry) => {
+							if (entry.isIntersecting) {
+								entry.target.classList.add('in-view');
+								revealObserver.unobserve(entry.target);
+							}
+						}),
+					{ threshold: 0.1, rootMargin: '0px 0px -52px 0px' }
+				);
+
+				document
+					.querySelectorAll('[data-anim]:not(.in-view)')
+					.forEach((el) => revealObserver.observe(el));
+			};
+
+			const initBrandingTilt = () => {
+				if (window.innerWidth < 1024) return;
+
 				const card = document.getElementById('branding-card');
-				const width = card?.clientWidth || 0;
-				const height = card?.clientHeight || 0;
-				
-				card?.addEventListener('mousemove', (e) => {
-					const {layerX, layerY} = e;
-			
-					const yRotation = ((layerX - width / 2) / width) * 20; // Rango de rotación en Y
-					const xRotation = ((layerY - height / 2) / height) * 20; // Rango de rotación en X
-			
-					const string = `
-						perspective(1000px) 
-						scale(1.02) 
-						rotateX(${xRotation}deg) 
+				if (!card || card.dataset.tiltReady === 'true') return;
+
+				const width = card.clientWidth;
+				const height = card.clientHeight;
+
+				card.addEventListener('mousemove', (event) => {
+					const { layerX, layerY } = event;
+					const yRotation = ((layerX - width / 2) / width) * 20;
+					const xRotation = ((layerY - height / 2) / height) * 20;
+
+					card.style.transform = `
+						perspective(1000px)
+						scale(1.02)
+						rotateX(${xRotation}deg)
 						rotateY(${yRotation}deg)
-					`
-			
-					card.style.transform = string;
+					`;
 				});
-				card?.addEventListener('mouseleave', () => {
+
+				card.addEventListener('mouseleave', () => {
 					card.style.transform = 'perspective(500px) scale(1) rotateX(0) rotateY(0)';
 				});
-			}
+
+				card.dataset.tiltReady = 'true';
+			};
+
+			const initPageEffects = (skipRevealAnimation = false) => {
+				initScrollReveal(skipRevealAnimation);
+				initBrandingTilt();
+			};
+
+			document.addEventListener('astro:before-preparation', () => {
+				isClientNavigation = true;
+			});
+
+			document.addEventListener('astro:page-load', () => {
+				initPageEffects(isClientNavigation);
+				isClientNavigation = false;
+			});
+
+			initPageEffects();
 		</script>
 	</body>
 </html>

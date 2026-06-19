@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @media (prefers-reduced-motion: no-preference) {
   /* ── Keyframes ── */
   @keyframes mhe-fade-up {

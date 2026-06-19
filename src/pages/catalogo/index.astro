@@ -3,9 +3,10 @@ import Layout from '../../layouts/Layout.astro'
 import Header from '../../components/Header.astro'
 import Footer from '../../components/Footer.astro';
 
-import IconLayoutGrid from '@tabler/icons/outline/layout-grid.svg';
-import IconList from '@tabler/icons/outline/list.svg';
-import IconMessage from '@tabler/icons/outline/message.svg';
+// import IconLayoutGrid from '@tabler/icons/outline/layout-grid.svg';
+// import IconList from '@tabler/icons/outline/list.svg';
+import IconFilter from '@tabler/icons/outline/filter.svg';
+import IconBrandWhatsapp from '@tabler/icons/outline/brand-whatsapp.svg';
 
 import products from './products.json';
 ---
@@ -22,38 +23,224 @@ import products from './products.json';
     </div>
 
     <div class="flex gap-2">
-      <button class="grid place-content-center w-10 lg:w-13 aspect-square p-0 border border-[#eceeee] text-[0.74rem] tracking-[0.14em] text-[#eceeee] uppercase transition hover:bg-[#eceeee]/20 cursor-pointer">
+      <!-- <button class="grid place-content-center w-10 lg:w-13 aspect-square p-0 border border-[#eceeee] text-[0.74rem] tracking-[0.14em] text-[#eceeee] uppercase transition hover:bg-[#eceeee]/20 cursor-pointer">
         <IconLayoutGrid class="inline-block" />
       </button>
       <button class="grid place-content-center w-10 lg:w-13 aspect-square p-0 border border-[#eceeee] text-[0.74rem] tracking-[0.14em] text-[#eceeee] uppercase transition hover:bg-[#eceeee]/20 cursor-pointer">
         <IconList class="inline-block" />
-      </button>
+      </button> -->
+      <div class="relative">
+        <button
+          id="catalog-filter-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="catalog-filter-menu"
+          class="grid place-content-center w-10 lg:w-13 aspect-square p-0 border border-[#eceeee] text-[0.74rem] tracking-[0.14em] text-[#eceeee] uppercase transition hover:bg-[#eceeee]/20 cursor-pointer"
+          title="Filtrar catálogo"
+        >
+          <IconFilter class="inline-block" />
+        </button>
+
+        <div
+          id="catalog-filter-menu"
+          class="hidden absolute right-0 top-full mt-2 w-[18rem] border border-[#3a3f3f] bg-[#131717] p-4 z-20"
+        >
+          <p class="text-[0.65rem] tracking-[0.12em] uppercase text-[#b6b9b9] mb-3">Filtrar productos</p>
+
+          <label for="catalog-search-filter" class="block text-[0.65rem] tracking-[0.12em] uppercase text-[#b6b9b9] mb-1">Buscar</label>
+          <input
+            id="catalog-search-filter"
+            type="text"
+            placeholder="Nombre o palabra clave"
+            class="w-full h-10 px-3 mb-3 border border-[#3a3f3f] bg-[#1a1f1f] text-[#eceeee] text-sm"
+          />
+
+          <p class="block text-[0.65rem] tracking-[0.12em] uppercase text-[#b6b9b9] mb-1">Precio</p>
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <input
+              id="catalog-price-min"
+              type="number"
+              inputmode="numeric"
+              min="0"
+              placeholder="Mínimo"
+              class="w-full h-10 px-3 border border-[#3a3f3f] bg-[#1a1f1f] text-[#eceeee] text-sm"
+            />
+            <input
+              id="catalog-price-max"
+              type="number"
+              inputmode="numeric"
+              min="0"
+              placeholder="Máximo"
+              class="w-full h-10 px-3 border border-[#3a3f3f] bg-[#1a1f1f] text-[#eceeee] text-sm"
+            />
+          </div>
+
+          <label for="catalog-sexo-filter" class="block text-[0.65rem] tracking-[0.12em] uppercase text-[#b6b9b9] mb-1">Línea</label>
+          <select
+            id="catalog-sexo-filter"
+            class="w-full h-10 px-3 mb-4 border border-[#3a3f3f] bg-[#1a1f1f] text-[#eceeee] text-sm"
+          >
+            <option value="all">Todos</option>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+          </select>
+
+          <button
+            id="catalog-clear-filters"
+            type="button"
+            class="w-full h-10 border border-[#eceeee] text-[0.65rem] tracking-[0.12em] uppercase text-[#eceeee] transition hover:bg-[#eceeee]/20"
+          >
+            Limpiar filtros
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
   <main class="mt-10 max-w-7xl mx-auto px-4">
-    <div class='grid cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-20 mt-8'>
+    <div id="catalog-products-grid" class='grid cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-20 mt-8'>
       {
-        products.map((product) => (
-          <div class='flex flex-col relative' data-anim="fade">
-            <div class='overflow-hidden aspect-square mb-2'>
-              <img src={product.image} alt={product.name} class="w-full h-auto mb-4 aspect-square object-cover hover:scale-105 transition-transform duration-300">
-            </div>
+        products.map((product, i) => (
+          <div
+            class='catalog-product-card flex flex-col relative'
+            data-price={product.price}
+            data-sexo={product.sexo}
+            data-name={product.name}
+            data-keywords={product.keywords.join(' ')}
+          >
+            <a href={`/catalogo/${product.id}`} class="block overflow-hidden aspect-[0.71/1] mb-2" aria-label={`Ver ${product.name}`}>
+              <img transition:name={`product-image-${product.id}`} src={product.image} alt={product.name} class="w-full h-auto mb-4 aspect-[0.71/1] object-cover hover:scale-105 transition-transform duration-300">
+            </a>
             <div>
               <div class='flex items-center justify-between mb-1'>
-                <h2 class="text-xl font-black font-['Montserrat'] uppercase">{product.name}</h2>
-                <a href={product['contact-link']} target="_blank" class='px-2 transition-colors duration-200 cursor-pointer hover:text-[#eceeee] text-[#b6b9b9]' title="Consultar sobre este producto">
-                  <IconMessage class="inline-block" />
+                <h2 transition:name={`product-title-${product.id}`} class="text-xl font-black font-['Montserrat'] uppercase">
+                  <a href={`/catalogo/${product.id}`} class="transition-colors duration-150 hover:text-[#b6b9b9] hover:underline" title={`Ver detalles de ${product.name}`}>
+                    {product.name}
+                  </a>
+                </h2>
+                <a href={`https://wa.me/123123123?text=${encodeURIComponent('Hola, estoy interesado en el producto "' + product.name + '"')}`} target="_blank" class='px-2 transition-colors duration-200 cursor-pointer hover:text-[#eceeee] text-green-500' title="Consultar sobre este producto">
+                  <IconBrandWhatsapp class="inline-block" />
                 </a>
               </div>
-              <p class="text-[#b6b9b9]">{product.description}</p>
+              <p class="text-[#b6b9b9] text-xs">{product.description}</p>
             </div>
             <p class="absolute top-2 right-2 text-sm bg-[#222] px-2 py-1 text-white">${product.price} / 10u</p>
           </div>
         ))
       }
     </div>
+    <p id="catalog-empty-state" class="hidden mt-8 text-sm text-[#b6b9b9] uppercase tracking-[0.08em]">No hay productos para esos filtros.</p>
   </main>
+
+  <script is:inline>
+    const filterToggle = document.getElementById('catalog-filter-toggle');
+    const filterMenu = document.getElementById('catalog-filter-menu');
+    const searchFilter = document.getElementById('catalog-search-filter');
+    const priceMinFilter = document.getElementById('catalog-price-min');
+    const priceMaxFilter = document.getElementById('catalog-price-max');
+    const sexoFilter = document.getElementById('catalog-sexo-filter');
+    const clearFiltersButton = document.getElementById('catalog-clear-filters');
+    const productCards = Array.from(document.querySelectorAll('.catalog-product-card'));
+    const emptyState = document.getElementById('catalog-empty-state');
+
+    const closeFilterMenu = () => {
+      filterMenu?.classList.add('hidden');
+      filterToggle?.setAttribute('aria-expanded', 'false');
+    };
+
+    const openFilterMenu = () => {
+      filterMenu?.classList.remove('hidden');
+      filterToggle?.setAttribute('aria-expanded', 'true');
+    };
+
+    const toggleFilterMenu = () => {
+      if (!filterMenu || !filterToggle) return;
+
+      const isOpen = !filterMenu.classList.contains('hidden');
+      if (isOpen) {
+        closeFilterMenu();
+        return;
+      }
+      openFilterMenu();
+    };
+
+    const isPriceInRange = (value, min, max) => {
+      const hasMin = Number.isFinite(min);
+      const hasMax = Number.isFinite(max);
+      if (hasMin && value < min) return false;
+      if (hasMax && value > max) return false;
+      return true;
+    };
+
+    const normalizeText = (value) =>
+      value
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+
+    const applyFilters = () => {
+      const searchQuery = normalizeText(searchFilter?.value || '');
+      const searchTerms = searchQuery.length > 0 ? searchQuery.split(/\s+/).filter(Boolean) : [];
+      const minValue = Number.parseFloat(priceMinFilter?.value || '');
+      const maxValue = Number.parseFloat(priceMaxFilter?.value || '');
+      const selectedSexo = sexoFilter?.value || 'all';
+
+      const normalizedMin = Number.isFinite(minValue) ? minValue : Number.NaN;
+      const normalizedMax = Number.isFinite(maxValue) ? maxValue : Number.NaN;
+
+      let visibleProducts = 0;
+
+      productCards.forEach((card) => {
+        const price = Number(card.getAttribute('data-price') || 0);
+        const sexo = card.getAttribute('data-sexo') || '';
+        const name = normalizeText(card.getAttribute('data-name') || '');
+        const keywords = normalizeText(card.getAttribute('data-keywords') || '');
+
+        const searchableText = `${name} ${keywords}`;
+
+        const matchPrice = isPriceInRange(price, normalizedMin, normalizedMax);
+        const matchSexo = selectedSexo === 'all' || sexo === selectedSexo;
+        const matchSearch = searchTerms.length === 0 || searchTerms.every((term) => searchableText.includes(term));
+        const shouldShow = matchPrice && matchSexo && matchSearch;
+
+        card.classList.toggle('hidden', !shouldShow);
+        if (shouldShow) visibleProducts += 1;
+      });
+
+      emptyState?.classList.toggle('hidden', visibleProducts > 0);
+    };
+
+    filterToggle?.addEventListener('click', toggleFilterMenu);
+
+    document.addEventListener('click', (event) => {
+      if (!filterMenu || !filterToggle) return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+
+      const clickedOutside = !filterMenu.contains(target) && !filterToggle.contains(target);
+      if (clickedOutside) closeFilterMenu();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeFilterMenu();
+    });
+
+    searchFilter?.addEventListener('input', applyFilters);
+    priceMinFilter?.addEventListener('input', applyFilters);
+    priceMaxFilter?.addEventListener('input', applyFilters);
+    sexoFilter?.addEventListener('change', applyFilters);
+
+    clearFiltersButton?.addEventListener('click', () => {
+      if (searchFilter) searchFilter.value = '';
+      if (priceMinFilter) priceMinFilter.value = '';
+      if (priceMaxFilter) priceMaxFilter.value = '';
+      if (sexoFilter) sexoFilter.value = 'all';
+      applyFilters();
+    });
+
+    applyFilters();
+  </script>
 
   <Footer />
 </Layout>
