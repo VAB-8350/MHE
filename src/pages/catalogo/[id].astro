@@ -47,8 +47,8 @@ const whatsappUrl = `https://wa.me/123123123?text=${encodeURIComponent(`Hola, es
         <h1 transition:name={`product-title-${product.id}`} class="mt-3 text-3xl lg:text-5xl font-black font-['Montserrat'] uppercase leading-[0.95]">{product.name}</h1>
 
         <div class="mt-6 border-y border-[#2a2f2f] py-4 flex items-center justify-between gap-4">
-          <p class="text-[#eceeee] font-['JetBrains_Mono'] text-sm uppercase tracking-[0.08em]">Precio mayorista</p>
-          <p class="text-lg font-['JetBrains_Mono'] text-[#eceeee]">${product.price} / 10u</p>
+          <p class="text-[#eceeee] font-['JetBrains_Mono'] text-sm uppercase tracking-[0.08em]">Encargo Mínimo</p>
+          <p class="text-lg font-['JetBrains_Mono'] text-[#eceeee]">{product['u-min']} Unidades</p>
         </div>
 
         <p class="mt-6 text-sm lg:text-base text-[#b6b9b9] leading-relaxed font-['JetBrains_Mono']">{product.description}</p>

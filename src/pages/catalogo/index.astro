@@ -55,26 +55,6 @@ import products from './products.json';
             class="w-full h-10 px-3 mb-3 border border-[#3a3f3f] bg-[#1a1f1f] text-[#eceeee] text-sm"
           />
 
-          <p class="block text-[0.65rem] tracking-[0.12em] uppercase text-[#b6b9b9] mb-1">Precio</p>
-          <div class="grid grid-cols-2 gap-2 mb-3">
-            <input
-              id="catalog-price-min"
-              type="number"
-              inputmode="numeric"
-              min="0"
-              placeholder="Mínimo"
-              class="w-full h-10 px-3 border border-[#3a3f3f] bg-[#1a1f1f] text-[#eceeee] text-sm"
-            />
-            <input
-              id="catalog-price-max"
-              type="number"
-              inputmode="numeric"
-              min="0"
-              placeholder="Máximo"
-              class="w-full h-10 px-3 border border-[#3a3f3f] bg-[#1a1f1f] text-[#eceeee] text-sm"
-            />
-          </div>
-
           <label for="catalog-sexo-filter" class="block text-[0.65rem] tracking-[0.12em] uppercase text-[#b6b9b9] mb-1">Línea</label>
           <select
             id="catalog-sexo-filter"
@@ -103,7 +83,6 @@ import products from './products.json';
         products.map((product, i) => (
           <div
             class='catalog-product-card flex flex-col relative'
-            data-price={product.price}
             data-sexo={product.sexo}
             data-name={product.name}
             data-keywords={product.keywords.join(' ')}
@@ -124,7 +103,7 @@ import products from './products.json';
               </div>
               <p class="text-[#b6b9b9] text-xs">{product.description}</p>
             </div>
-            <p class="absolute top-2 right-2 text-sm bg-[#222] px-2 py-1 text-white">${product.price} / 10u</p>
+            <p class="absolute top-2 right-2 text-sm bg-[#222] px-2 py-1 text-white">Min {product["u-min"]}U</p>
           </div>
         ))
       }
@@ -136,8 +115,6 @@ import products from './products.json';
     const filterToggle = document.getElementById('catalog-filter-toggle');
     const filterMenu = document.getElementById('catalog-filter-menu');
     const searchFilter = document.getElementById('catalog-search-filter');
-    const priceMinFilter = document.getElementById('catalog-price-min');
-    const priceMaxFilter = document.getElementById('catalog-price-max');
     const sexoFilter = document.getElementById('catalog-sexo-filter');
     const clearFiltersButton = document.getElementById('catalog-clear-filters');
     const productCards = Array.from(document.querySelectorAll('.catalog-product-card'));
@@ -164,14 +141,6 @@ import products from './products.json';
       openFilterMenu();
     };
 
-    const isPriceInRange = (value, min, max) => {
-      const hasMin = Number.isFinite(min);
-      const hasMax = Number.isFinite(max);
-      if (hasMin && value < min) return false;
-      if (hasMax && value > max) return false;
-      return true;
-    };
-
     const normalizeText = (value) =>
       value
         .toLowerCase()
@@ -182,27 +151,20 @@ import products from './products.json';
     const applyFilters = () => {
       const searchQuery = normalizeText(searchFilter?.value || '');
       const searchTerms = searchQuery.length > 0 ? searchQuery.split(/\s+/).filter(Boolean) : [];
-      const minValue = Number.parseFloat(priceMinFilter?.value || '');
-      const maxValue = Number.parseFloat(priceMaxFilter?.value || '');
       const selectedSexo = sexoFilter?.value || 'all';
-
-      const normalizedMin = Number.isFinite(minValue) ? minValue : Number.NaN;
-      const normalizedMax = Number.isFinite(maxValue) ? maxValue : Number.NaN;
 
       let visibleProducts = 0;
 
       productCards.forEach((card) => {
-        const price = Number(card.getAttribute('data-price') || 0);
         const sexo = card.getAttribute('data-sexo') || '';
         const name = normalizeText(card.getAttribute('data-name') || '');
         const keywords = normalizeText(card.getAttribute('data-keywords') || '');
 
         const searchableText = `${name} ${keywords}`;
 
-        const matchPrice = isPriceInRange(price, normalizedMin, normalizedMax);
         const matchSexo = selectedSexo === 'all' || sexo === selectedSexo;
         const matchSearch = searchTerms.length === 0 || searchTerms.every((term) => searchableText.includes(term));
-        const shouldShow = matchPrice && matchSexo && matchSearch;
+        const shouldShow = matchSexo && matchSearch;
 
         card.classList.toggle('hidden', !shouldShow);
         if (shouldShow) visibleProducts += 1;
@@ -227,14 +189,10 @@ import products from './products.json';
     });
 
     searchFilter?.addEventListener('input', applyFilters);
-    priceMinFilter?.addEventListener('input', applyFilters);
-    priceMaxFilter?.addEventListener('input', applyFilters);
     sexoFilter?.addEventListener('change', applyFilters);
 
     clearFiltersButton?.addEventListener('click', () => {
       if (searchFilter) searchFilter.value = '';
-      if (priceMinFilter) priceMinFilter.value = '';
-      if (priceMaxFilter) priceMaxFilter.value = '';
       if (sexoFilter) sexoFilter.value = 'all';
       applyFilters();
     });
