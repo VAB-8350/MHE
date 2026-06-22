@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import generateLink from '../../utils/generateContactLinks';
 
 import IconArrowLeft from '@tabler/icons/outline/arrow-left.svg';
 import IconBrandWhatsapp from '@tabler/icons/outline/brand-whatsapp.svg';
@@ -16,7 +17,6 @@ export function getStaticPaths() {
 }
 
 const { product } = Astro.props;
-const whatsappUrl = `https://wa.me/123123123?text=${encodeURIComponent(`Hola, estoy interesado en el producto "${product.name}"`)}`;
 ---
 
 <Layout
@@ -60,7 +60,7 @@ const whatsappUrl = `https://wa.me/123123123?text=${encodeURIComponent(`Hola, es
         </div>
 
         <div class="mt-8 flex items-center gap-3">
-          <a href={whatsappUrl} target="_blank" class="inline-flex items-center gap-2 border border-[#eceeee] px-5 h-11 text-[0.68rem] tracking-[0.12em] uppercase text-[#eceeee] transition hover:bg-[#eceeee]/20">
+          <a href={generateLink(product)} target="_blank" class="inline-flex items-center gap-2 border border-[#eceeee] px-5 h-11 text-[0.68rem] tracking-[0.12em] uppercase text-[#eceeee] transition hover:bg-[#eceeee]/20">
             <IconBrandWhatsapp class="inline-block text-green-500" />
             Consultar por WhatsApp
           </a>

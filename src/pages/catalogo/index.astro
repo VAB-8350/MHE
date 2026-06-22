@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import Header from '../../components/Header.astro'
 import Footer from '../../components/Footer.astro';
+import generateLink from '../../utils/generateContactLinks';
 
 // import IconLayoutGrid from '@tabler/icons/outline/layout-grid.svg';
 // import IconList from '@tabler/icons/outline/list.svg';
@@ -97,7 +98,7 @@ import products from './products.json';
                     {product.name}
                   </a>
                 </h2>
-                <a href={`https://wa.me/123123123?text=${encodeURIComponent('Hola, estoy interesado en el producto "' + product.name + '"')}`} target="_blank" class='px-2 transition-colors duration-200 cursor-pointer hover:text-[#eceeee] text-green-500' title="Consultar sobre este producto">
+                <a href={generateLink(product)} target="_blank" class='px-2 transition-colors duration-200 cursor-pointer hover:text-[#eceeee] text-green-500' title="Consultar sobre este producto">
                   <IconBrandWhatsapp class="inline-block" />
                 </a>
               </div>
