@@ -7,12 +7,27 @@ const defaultNavItems = [
 const props = Astro.props
 const { navItems = defaultNavItems } = props
 ---
-<header class="sticky top-0 z-20 flex items-center justify-between border-b border-[#3a3e3e] bg-[rgb(10_12_12_/_82%)] px-[clamp(1.25rem,2.6vw,3.5rem)] py-[1.1rem] backdrop-blur-[10px]">
+<header data-mobile-nav class="sticky top-0 z-20 flex items-center justify-between border-b border-[#3a3e3e] bg-[rgb(10_12_12/82%)] px-[clamp(1.25rem,2.6vw,3.5rem)] py-[1.1rem] backdrop-blur-[10px]">
   <div class="flex items-center gap-4">
     <a href="/" class="flex items-center gap-2">
       <img src="/logos/MHE-08.svg" alt="MHE Logo" class="h-6 w-auto" />
     </a>
   </div>
+  <button
+    type="button"
+    data-mobile-nav-toggle
+    aria-label="Abrir menu"
+    aria-controls="mobile-nav-menu"
+    aria-expanded="false"
+    class="flex md:hidden h-10 w-10 items-center justify-center rounded-md border border-[#3a3e3e] text-[#eceeee]"
+  >
+    <span class="sr-only">Abrir menu</span>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+      <path d="M4 7h16" stroke-linecap="round"></path>
+      <path d="M4 12h16" stroke-linecap="round"></path>
+      <path d="M4 17h16" stroke-linecap="round"></path>
+    </svg>
+  </button>
   <nav class="hidden gap-[clamp(0.6rem,1vw,1.8rem)] md:flex">
     {
       navItems.map((item :{ name: string, href: string, blank?: boolean }) => (
@@ -27,4 +42,119 @@ const { navItems = defaultNavItems } = props
       ))
     }
   </nav>
+  <div id="mobile-nav-menu" data-mobile-nav-menu class="invisible absolute right-0 top-full -translate-y-2 px-[clamp(1.25rem,2.6vw,3.5rem)] pb-4 opacity-0 pointer-events-none transition-all duration-200 ease-out md:hidden">
+    <nav class="rounded-md border border-[#3a3e3e] bg-[rgb(10_12_12/96%)] p-2 backdrop-blur-[10px]">
+      {
+        navItems.map((item :{ name: string, href: string, blank?: boolean }) => (
+          <a
+            href={item.href}
+            target={item.blank ? "_blank" : "_self"}
+            rel={item.blank ? "noopener noreferrer" : undefined}
+            class='block rounded-[0.35rem] border border-transparent px-3 py-[0.65rem] text-[0.74rem] tracking-[0.14em] text-[#b6b9b9] transition duration-200 hover:border-[#eceeee] hover:text-[#eceeee]'
+          >
+            {item.name.toUpperCase()}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
 </header>
+
+<script>
+  const headerSelector = '[data-mobile-nav]'
+  const readyAttr = 'data-mobile-nav-ready'
+  const initializedHeaders = new WeakSet()
+
+  const syncBodyLock = () => {
+    const hasOpenMenu = Array.from(document.querySelectorAll(headerSelector)).some((el) => {
+      const elToggle = el.querySelector('[data-mobile-nav-toggle]')
+      return elToggle?.getAttribute('aria-expanded') === 'true'
+    })
+    // document.body.classList.toggle('overflow-hidden', hasOpenMenu)
+  }
+
+  const closeAllMenus = () => {
+    document.querySelectorAll(headerSelector).forEach((header) => {
+      const toggle = header.querySelector('[data-mobile-nav-toggle]')
+      const menu = header.querySelector('[data-mobile-nav-menu]')
+      if (!toggle || !menu) return
+
+      toggle.setAttribute('aria-expanded', 'false')
+      menu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto')
+      menu.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none')
+
+      window.setTimeout(() => {
+        if (toggle.getAttribute('aria-expanded') === 'false') {
+          menu.classList.add('invisible')
+        }
+      }, 200)
+    })
+
+    syncBodyLock()
+  }
+
+  const initMobileNav = () => {
+    const headers = document.querySelectorAll(headerSelector)
+
+    headers.forEach((header) => {
+      if (initializedHeaders.has(header)) return
+
+      const toggle = header.querySelector('[data-mobile-nav-toggle]')
+      const menu = header.querySelector('[data-mobile-nav-menu]')
+      if (!toggle || !menu) return
+
+      toggle.addEventListener('click', () => {
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true'
+        if (!isOpen) closeAllMenus()
+
+        toggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true')
+        if (isOpen) {
+          menu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto')
+          menu.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none')
+
+          window.setTimeout(() => {
+            if (toggle.getAttribute('aria-expanded') === 'false') {
+              menu.classList.add('invisible')
+            }
+          }, 200)
+        } else {
+          menu.classList.remove('invisible', 'opacity-0', '-translate-y-2', 'pointer-events-none')
+          menu.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto')
+        }
+
+        syncBodyLock()
+      })
+
+      menu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => closeAllMenus())
+      })
+
+      initializedHeaders.add(header)
+    })
+  }
+
+  if (!document.documentElement.hasAttribute(readyAttr)) {
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeAllMenus()
+    })
+
+    document.addEventListener('click', (event) => {
+      const target = event.target
+      if (!(target instanceof Node)) return
+      if (!target.parentElement?.closest(headerSelector)) closeAllMenus()
+    })
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) closeAllMenus()
+    })
+
+    document.addEventListener('astro:page-load', () => {
+      initMobileNav()
+      closeAllMenus()
+    })
+
+    document.documentElement.setAttribute(readyAttr, 'true')
+  }
+
+  initMobileNav()
+</script>

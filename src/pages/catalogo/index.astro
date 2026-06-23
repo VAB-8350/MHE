@@ -113,25 +113,33 @@ import products from './products.json';
   </main>
 
   <script is:inline>
-    const filterToggle = document.getElementById('catalog-filter-toggle');
-    const filterMenu = document.getElementById('catalog-filter-menu');
-    const searchFilter = document.getElementById('catalog-search-filter');
-    const sexoFilter = document.getElementById('catalog-sexo-filter');
-    const clearFiltersButton = document.getElementById('catalog-clear-filters');
-    const productCards = Array.from(document.querySelectorAll('.catalog-product-card'));
-    const emptyState = document.getElementById('catalog-empty-state');
+    const readyAttr = 'data-catalog-filters-ready';
+    const boundElements = new WeakSet();
+
+    const getRefs = () => ({
+      filterToggle: document.getElementById('catalog-filter-toggle'),
+      filterMenu: document.getElementById('catalog-filter-menu'),
+      searchFilter: document.getElementById('catalog-search-filter'),
+      sexoFilter: document.getElementById('catalog-sexo-filter'),
+      clearFiltersButton: document.getElementById('catalog-clear-filters'),
+      emptyState: document.getElementById('catalog-empty-state'),
+      productCards: Array.from(document.querySelectorAll('.catalog-product-card')),
+    });
 
     const closeFilterMenu = () => {
+      const { filterToggle, filterMenu } = getRefs();
       filterMenu?.classList.add('hidden');
       filterToggle?.setAttribute('aria-expanded', 'false');
     };
 
     const openFilterMenu = () => {
+      const { filterToggle, filterMenu } = getRefs();
       filterMenu?.classList.remove('hidden');
       filterToggle?.setAttribute('aria-expanded', 'true');
     };
 
     const toggleFilterMenu = () => {
+      const { filterToggle, filterMenu } = getRefs();
       if (!filterMenu || !filterToggle) return;
 
       const isOpen = !filterMenu.classList.contains('hidden');
@@ -150,6 +158,8 @@ import products from './products.json';
         .trim();
 
     const applyFilters = () => {
+      const { searchFilter, sexoFilter, productCards, emptyState } = getRefs();
+
       const searchQuery = normalizeText(searchFilter?.value || '');
       const searchTerms = searchQuery.length > 0 ? searchQuery.split(/\s+/).filter(Boolean) : [];
       const selectedSexo = sexoFilter?.value || 'all';
@@ -174,31 +184,61 @@ import products from './products.json';
       emptyState?.classList.toggle('hidden', visibleProducts > 0);
     };
 
-    filterToggle?.addEventListener('click', toggleFilterMenu);
+    const initCatalogFilters = () => {
+      const { filterToggle, searchFilter, sexoFilter, clearFiltersButton } = getRefs();
 
-    document.addEventListener('click', (event) => {
-      if (!filterMenu || !filterToggle) return;
-      const target = event.target;
-      if (!(target instanceof Node)) return;
+      if (filterToggle && !boundElements.has(filterToggle)) {
+        filterToggle.addEventListener('click', toggleFilterMenu);
+        boundElements.add(filterToggle);
+      }
 
-      const clickedOutside = !filterMenu.contains(target) && !filterToggle.contains(target);
-      if (clickedOutside) closeFilterMenu();
-    });
+      if (searchFilter && !boundElements.has(searchFilter)) {
+        searchFilter.addEventListener('input', applyFilters);
+        boundElements.add(searchFilter);
+      }
 
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeFilterMenu();
-    });
+      if (sexoFilter && !boundElements.has(sexoFilter)) {
+        sexoFilter.addEventListener('change', applyFilters);
+        boundElements.add(sexoFilter);
+      }
 
-    searchFilter?.addEventListener('input', applyFilters);
-    sexoFilter?.addEventListener('change', applyFilters);
+      if (clearFiltersButton && !boundElements.has(clearFiltersButton)) {
+        clearFiltersButton.addEventListener('click', () => {
+          const { searchFilter: currentSearch, sexoFilter: currentSexo } = getRefs();
+          if (currentSearch) currentSearch.value = '';
+          if (currentSexo) currentSexo.value = 'all';
+          applyFilters();
+        });
+        boundElements.add(clearFiltersButton);
+      }
 
-    clearFiltersButton?.addEventListener('click', () => {
-      if (searchFilter) searchFilter.value = '';
-      if (sexoFilter) sexoFilter.value = 'all';
       applyFilters();
-    });
+    };
 
-    applyFilters();
+    if (!document.documentElement.hasAttribute(readyAttr)) {
+      document.addEventListener('click', (event) => {
+        const { filterToggle, filterMenu } = getRefs();
+        if (!filterMenu || !filterToggle) return;
+
+        const target = event.target;
+        if (!(target instanceof Node)) return;
+
+        const clickedOutside = !filterMenu.contains(target) && !filterToggle.contains(target);
+        if (clickedOutside) closeFilterMenu();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeFilterMenu();
+      });
+
+      document.addEventListener('astro:page-load', () => {
+        initCatalogFilters();
+      });
+
+      document.documentElement.setAttribute(readyAttr, 'true');
+    }
+
+    initCatalogFilters();
   </script>
 
   <Footer />

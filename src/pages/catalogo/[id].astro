@@ -39,11 +39,11 @@ const { product } = Astro.props;
 
     <section class="mt-8 lg:mt-12 grid grid-cols-1 lg:grid-cols-9 gap-8 lg:gap-12">
       <div class="lg:col-span-4 border border-[#2a2f2f] overflow-hidden justify-self-center">
-        <img transition:name={`product-image-${product.id}`} src={product.image} alt={product.name} class="w-auto h-[70vh] object-contain" />
+        <img transition:name={`product-image-${product.id}`} src={product.image} alt={product.name} class="w-full md:w-auto md:h-[70vh] object-contain" />
       </div>
 
       <div class="lg:col-span-5">
-        <p class="text-[0.68rem] tracking-[0.12em] uppercase text-[#b6b9b9]">{`// ficha de producto`}</p>
+        <p class="text-[0.68rem] tracking-[0.12em] uppercase text-[#b6b9b9] hidden md:block">{`// ficha de producto`}</p>
         <h1 transition:name={`product-title-${product.id}`} class="mt-3 text-3xl lg:text-5xl font-black font-['Montserrat'] uppercase leading-[0.95]">{product.name}</h1>
 
         <div class="mt-6 border-y border-[#2a2f2f] py-4 flex items-center justify-between gap-4">
