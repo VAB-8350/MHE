@@ -10,11 +10,32 @@ import IconFilter from '@tabler/icons/outline/filter.svg';
 import IconBrandWhatsapp from '@tabler/icons/outline/brand-whatsapp.svg';
 
 import products from './products.json';
+
+const siteUrl = Astro.site?.toString() ?? 'https://www.mhe-indumentaria.com';
+const normalizeImagePath = (path: string) => (path.startsWith('../') ? `/${path.slice(3)}` : path);
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Catalogo mayorista de indumentaria MHE',
+  description: 'Listado de productos mayoristas de indumentaria personalizada de MHE.',
+  itemListElement: products.map((product, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: new URL(`/catalogo/${product.id}`, siteUrl).toString(),
+    name: product.name,
+    image: new URL(normalizeImagePath(product.image), siteUrl).toString()
+  }))
+};
 ---
 
 <Layout
-	title="MHE | Industria Textil Mayorista"
-	description="Landing de MHE: fabrica mayorista de indumentaria personalizada en Rio Cuarto."
+	title="Catalogo Mayorista | MHE Indumentaria"
+	description="Explora el catalogo mayorista de MHE: prendas para marcas y empresas con produccion textil personalizada y minima por modelo."
+	image="/logos/MHE-06.svg"
+	keywords={['catalogo mayorista', 'indumentaria por mayor', 'fabrica textil', 'uniformes', 'ropa para marcas']}
+	type="website"
+	schema={itemListSchema}
 >
   <Header />
   <p class="mt-4 lg:mt-10 mb-4 max-w-7xl mx-auto px-4 text-[0.8rem] tracking-[0.1em] uppercase text-[#b6b9b9]">{`// factory direct`}</p>

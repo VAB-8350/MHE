@@ -11,12 +11,47 @@ import { ClientRouter } from 'astro:transitions';
 interface Props {
 	title?: string;
 	description?: string;
+	image?: string;
+	keywords?: string[];
+	type?: 'website' | 'article' | 'product';
+	noindex?: boolean;
+	schema?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 const {
 	title = 'MHE | Mayorista de Indumentaria',
-	description = 'Fabricacion mayorista de indumentaria personalizada, con foco en calidad, tiempos de entrega y precio competitivo.'
+	description = 'Fabricacion mayorista de indumentaria personalizada, con foco en calidad, tiempos de entrega y precio competitivo.',
+	image = '/logos/MHE-06.svg',
+	keywords = ['indumentaria mayorista', 'fabrica textil', 'Rio Cuarto', 'ropa personalizada', 'proveedor mayorista'],
+	type = 'website',
+	noindex = false,
+	schema
 } = Astro.props;
+
+const siteUrl = Astro.site?.toString() ?? 'https://www.mhe-indumentaria.com';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+const resolvedImage = image.startsWith('http')
+	? image
+	: new URL(image.startsWith('/') ? image : `/${image}`, siteUrl).toString();
+const robotsContent = noindex ? 'noindex, nofollow' : 'index, follow';
+
+const defaultSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'Organization',
+	name: 'MHE Indumentaria Mayorista',
+	url: siteUrl,
+	logo: new URL('/logos/MHE-06.svg', siteUrl).toString(),
+	address: {
+		'@type': 'PostalAddress',
+		streetAddress: 'Velez Sarsfield 756',
+		addressLocality: 'Rio Cuarto',
+		addressRegion: 'Cordoba',
+		postalCode: '5800',
+		addressCountry: 'AR'
+	}
+};
+
+const schemaPayload = schema ?? defaultSchema;
 ---
 
 <!doctype html>
@@ -24,16 +59,35 @@ const {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content={robotsContent} />
+		<meta name="googlebot" content={robotsContent} />
+		<meta name="description" content={description} />
+		<meta name="keywords" content={keywords.join(', ')} />
+		<meta name="author" content="MHE Indumentaria Mayorista" />
+		<meta name="theme-color" content="#0f1111" />
+		<link rel="canonical" href={canonicalUrl} />
+		<link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 
-		<!-- meta graph -->
+		<!-- Open Graph -->
+		<meta property="og:site_name" content="MHE Indumentaria Mayorista" />
+		<meta property="og:locale" content="es_AR" />
+		<meta property="og:type" content={type} />
+		<meta property="og:url" content={canonicalUrl} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
-		<meta property="og:image" content="/logos/MHE-06.svg" />
+		<meta property="og:image" content={resolvedImage} />
+		<meta property="og:image:alt" content="MHE Indumentaria Mayorista" />
+
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={resolvedImage} />
 
 		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content={description} />
+		<script type="application/ld+json" set:html={JSON.stringify(schemaPayload)} />
 		<title>{title}</title>
 		<ClientRouter />
 	</head>

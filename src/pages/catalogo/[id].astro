@@ -17,11 +17,64 @@ export function getStaticPaths() {
 }
 
 const { product } = Astro.props;
+
+const siteUrl = Astro.site?.toString() ?? 'https://www.mhe-indumentaria.com';
+const normalizedImagePath = product.image.startsWith('../') ? `/${product.image.slice(3)}` : product.image;
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.name,
+  description: product.description,
+  image: [new URL(normalizedImagePath, siteUrl).toString()],
+  sku: product.id,
+  category: product.sexo === 'F' ? 'Indumentaria femenina mayorista' : 'Indumentaria masculina mayorista',
+  brand: {
+    '@type': 'Brand',
+    name: 'MHE'
+  },
+  additionalProperty: [
+    {
+      '@type': 'PropertyValue',
+      name: 'Encargo minimo',
+      value: `${product['u-min']} unidades`
+    }
+  ]
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Inicio',
+      item: new URL('/', siteUrl).toString()
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Catalogo',
+      item: new URL('/catalogo', siteUrl).toString()
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: product.name,
+      item: new URL(`/catalogo/${product.id}`, siteUrl).toString()
+    }
+  ]
+};
 ---
 
 <Layout
-  title={`MHE | ${product.name}`}
-  description={product.description}
+  title={`${product.name} | Catalogo Mayorista MHE`}
+  description={`${product.description} Encargo minimo: ${product['u-min']} unidades.`}
+  image={normalizedImagePath}
+  keywords={[...product.keywords, 'catalogo mayorista', 'indumentaria por mayor', 'fabrica textil']}
+  type="product"
+  schema={[productSchema, breadcrumbSchema]}
 >
   <Header />
 
