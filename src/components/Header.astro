@@ -65,14 +65,6 @@ const { navItems = defaultNavItems } = props
   const readyAttr = 'data-mobile-nav-ready'
   const initializedHeaders = new WeakSet()
 
-  const syncBodyLock = () => {
-    const hasOpenMenu = Array.from(document.querySelectorAll(headerSelector)).some((el) => {
-      const elToggle = el.querySelector('[data-mobile-nav-toggle]')
-      return elToggle?.getAttribute('aria-expanded') === 'true'
-    })
-    // document.body.classList.toggle('overflow-hidden', hasOpenMenu)
-  }
-
   const closeAllMenus = () => {
     document.querySelectorAll(headerSelector).forEach((header) => {
       const toggle = header.querySelector('[data-mobile-nav-toggle]')
@@ -89,8 +81,6 @@ const { navItems = defaultNavItems } = props
         }
       }, 200)
     })
-
-    syncBodyLock()
   }
 
   const initMobileNav = () => {
@@ -121,8 +111,6 @@ const { navItems = defaultNavItems } = props
           menu.classList.remove('invisible', 'opacity-0', '-translate-y-2', 'pointer-events-none')
           menu.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto')
         }
-
-        syncBodyLock()
       })
 
       menu.querySelectorAll('a').forEach((link) => {

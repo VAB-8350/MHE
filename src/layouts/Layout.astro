@@ -87,14 +87,14 @@ const schemaPayload = schema ?? defaultSchema;
 		<meta name="twitter:image" content={resolvedImage} />
 
 		<meta name="generator" content={Astro.generator} />
-		<script type="application/ld+json" set:html={JSON.stringify(schemaPayload)} />
+		<script is:inline set:html={JSON.stringify(schemaPayload)} />
 		<title>{title}</title>
 		<ClientRouter />
 	</head>
 	<body class="min-h-screen bg-[radial-gradient(circle_at_20%_-10%,#303434_0%,#0f1111_48%)] text-[#eceeee] font-['JetBrains_Mono'] antialiased selection:bg-[#eceeee] selection:text-[#333]">
 		<slot />
 		<script>
-			let revealObserver;
+			let revealObserver: IntersectionObserver | undefined;
 			let isClientNavigation = false;
 
 			const initScrollReveal = (skipAnimation = false) => {
@@ -105,20 +105,21 @@ const schemaPayload = schema ?? defaultSchema;
 					return;
 				}
 
-				revealObserver = new IntersectionObserver(
+				const observer = new IntersectionObserver(
 					(entries) =>
 						entries.forEach((entry) => {
 							if (entry.isIntersecting) {
 								entry.target.classList.add('in-view');
-								revealObserver.unobserve(entry.target);
+								observer.unobserve(entry.target);
 							}
 						}),
 					{ threshold: 0.1, rootMargin: '0px 0px -52px 0px' }
 				);
+				revealObserver = observer;
 
 				document
 					.querySelectorAll('[data-anim]:not(.in-view)')
-					.forEach((el) => revealObserver.observe(el));
+					.forEach((el) => observer.observe(el));
 			};
 
 			const initBrandingTilt = () => {
