@@ -6,6 +6,8 @@ import generateLink from '../../utils/generateContactLinks';
 
 import IconArrowLeft from '@tabler/icons/outline/arrow-left.svg';
 import IconBrandWhatsapp from '@tabler/icons/outline/brand-whatsapp.svg';
+import IconChevronLeft from '@tabler/icons/outline/chevron-left.svg';
+import IconChevronRight from '@tabler/icons/outline/chevron-right.svg';
 
 import products from './products.json';
 
@@ -91,8 +93,53 @@ const breadcrumbSchema = {
     </a>
 
     <section class="mt-8 lg:mt-12 grid grid-cols-1 lg:grid-cols-9 gap-8 lg:gap-12">
-      <div class="lg:col-span-4 border border-[#2a2f2f] overflow-hidden justify-self-center">
-        <img transition:name={`product-image-${product.id}`} src={product.image} alt={product.name} class="w-full md:w-auto md:h-[70vh] object-contain" />
+      <div class="lg:col-span-4 w-full justify-self-center">
+        {(() => {
+          const gallery = Array.isArray(product.images) && product.images.length > 0 ? product.images : [product.image];
+          const hasMultiple = gallery.length > 1;
+          return (
+            <div id="product-gallery" class="product-gallery" data-current="0">
+              <div class="gallery-stage border border-[#2a2f2f] overflow-hidden bg-[#0f1111] relative group">
+                <img
+                  id="gallery-main"
+                  transition:name={`product-image-${product.id}`}
+                  src={gallery[0]}
+                  alt={product.name}
+                  class="gallery-main-img w-full md:w-auto md:h-[70vh] mx-auto object-contain"
+                />
+
+                {hasMultiple && (
+                  <>
+                    <button type="button" data-gallery-dir="prev" class="gallery-arrow gallery-arrow--prev" aria-label="Imagen anterior">
+                      <IconChevronLeft class="w-5 h-5" />
+                    </button>
+                    <button type="button" data-gallery-dir="next" class="gallery-arrow gallery-arrow--next" aria-label="Imagen siguiente">
+                      <IconChevronRight class="w-5 h-5" />
+                    </button>
+                    <div class="gallery-counter font-['JetBrains_Mono']">
+                      <span data-gallery-index>1</span><span class="text-[#8e9192]"> / {gallery.length}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {hasMultiple && (
+                <div class="gallery-thumbs">
+                  {gallery.map((img: string, i: number) => (
+                    <button
+                      type="button"
+                      data-gallery-thumb={i}
+                      class:list={['gallery-thumb', { 'is-active': i === 0 }]}
+                      aria-label={`Ver imagen ${i + 1}`}
+                    >
+                      <img src={img} alt="" loading="lazy" class="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       <div class="lg:col-span-5">
@@ -125,3 +172,269 @@ const breadcrumbSchema = {
 
   <Footer />
 </Layout>
+
+<style>
+  .gallery-stage {
+    touch-action: pan-y;
+  }
+
+  .gallery-main-img {
+    will-change: transform, opacity;
+  }
+
+  /* Entrada animada al cambiar de imagen */
+  .gallery-main-img.is-anim-next {
+    animation: galleryInNext .5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .gallery-main-img.is-anim-prev {
+    animation: galleryInPrev .5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes galleryInNext {
+    from {
+      opacity: 0;
+      transform: translateX(200px);
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes galleryInPrev {
+    from {
+      opacity: 0;
+      transform: translateX(-200px);
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+      filter: blur(0);
+    }
+  }
+
+  /* Flechas de navegación */
+  .gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: #eceeee;
+    background: rgba(15, 17, 17, 0.55);
+    border: 1px solid #2a2f2f;
+    backdrop-filter: blur(6px);
+    transition: background 0.25s ease, border-color 0.25s ease, opacity 0.3s ease, transform 0.25s ease;
+    cursor: pointer;
+  }
+
+  .gallery-arrow:hover {
+    background: rgba(236, 238, 238, 0.16);
+    border-color: #eceeee;
+  }
+
+  .gallery-arrow:active {
+    transform: translateY(-50%) scale(0.92);
+  }
+
+  .gallery-arrow--prev {
+    left: 0.75rem;
+  }
+
+  .gallery-arrow--next {
+    right: 0.75rem;
+  }
+
+  /* En desktop las flechas aparecen al pasar el mouse */
+  @media (min-width: 768px) {
+    .gallery-arrow {
+      opacity: 0;
+    }
+
+    .group:hover .gallery-arrow {
+      opacity: 1;
+    }
+
+    .gallery-arrow--prev {
+      transform: translateY(-50%) translateX(-8px);
+    }
+
+    .gallery-arrow--next {
+      transform: translateY(-50%) translateX(8px);
+    }
+
+    .group:hover .gallery-arrow--prev,
+    .group:hover .gallery-arrow--next {
+      transform: translateY(-50%) translateX(0);
+    }
+  }
+
+  /* Contador */
+  .gallery-counter {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: #eceeee;
+    background: rgba(15, 17, 17, 0.6);
+    border: 1px solid #2a2f2f;
+    backdrop-filter: blur(6px);
+  }
+
+  /* Miniaturas */
+  .gallery-thumbs {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+
+  .gallery-thumbs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-thumb {
+    flex: 0 0 auto;
+    width: 4.5rem;
+    height: 5.5rem;
+    overflow: hidden;
+    border: 1px solid #2a2f2f;
+    opacity: 0.55;
+    transition: opacity 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    cursor: pointer;
+    background: #0f1111;
+  }
+
+  .gallery-thumb:hover {
+    opacity: 0.85;
+  }
+
+  .gallery-thumb.is-active {
+    opacity: 1;
+    border-color: #eceeee;
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-thumb {
+      width: 5rem;
+      height: 6rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-main-img.is-anim-next,
+    .gallery-main-img.is-anim-prev {
+      animation: none;
+    }
+
+    .gallery-arrow,
+    .gallery-thumb {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const initProductGallery = () => {
+    const gallery = document.getElementById('product-gallery');
+    if (!gallery) return;
+
+    const main = gallery.querySelector<HTMLImageElement>('#gallery-main');
+    const thumbs = Array.from(gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-thumb]'));
+    const indexEl = gallery.querySelector<HTMLElement>('[data-gallery-index]');
+    if (!main) return;
+
+    const sources = thumbs.length
+      ? thumbs.map((thumb) => thumb.querySelector('img')?.src ?? '')
+      : [main.src];
+
+    if (sources.length <= 1) return;
+
+    let current = 0;
+
+    const show = (index: number, direction: 'next' | 'prev') => {
+      const total = sources.length;
+      const next = ((index % total) + total) % total;
+      if (next === current) return;
+      current = next;
+
+      main.src = sources[next];
+      main.classList.remove('is-anim-next', 'is-anim-prev');
+      // Forzar reflow para reiniciar la animación
+      void main.offsetWidth;
+      main.classList.add(direction === 'prev' ? 'is-anim-prev' : 'is-anim-next');
+
+      thumbs.forEach((thumb, i) => thumb.classList.toggle('is-active', i === next));
+      if (indexEl) indexEl.textContent = String(next + 1);
+    };
+
+    gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-dir]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const dir = button.dataset.galleryDir === 'prev' ? 'prev' : 'next';
+        show(dir === 'prev' ? current - 1 : current + 1, dir);
+      });
+    });
+
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('click', () => {
+        show(i, i > current ? 'next' : 'prev');
+      });
+    });
+
+    // Swipe en mobile
+    const stage = gallery.querySelector<HTMLElement>('.gallery-stage');
+    if (stage) {
+      let startX = 0;
+      let tracking = false;
+
+      stage.addEventListener(
+        'touchstart',
+        (event) => {
+          startX = event.touches[0].clientX;
+          tracking = true;
+        },
+        { passive: true }
+      );
+
+      stage.addEventListener(
+        'touchend',
+        (event) => {
+          if (!tracking) return;
+          tracking = false;
+          const deltaX = event.changedTouches[0].clientX - startX;
+          if (Math.abs(deltaX) < 45) return;
+          if (deltaX < 0) {
+            show(current + 1, 'next');
+          } else {
+            show(current - 1, 'prev');
+          }
+        },
+        { passive: true }
+      );
+    }
+
+    // Navegación con teclado
+    gallery.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') {
+        show(current + 1, 'next');
+      } else if (event.key === 'ArrowLeft') {
+        show(current - 1, 'prev');
+      }
+    });
+  };
+
+  document.addEventListener('astro:page-load', initProductGallery);
+</script>

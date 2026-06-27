@@ -1,10 +1,21 @@
 [
   {
+    "id": "a95f3c2d",
+    "name": "PANTALÓN PALAZZO",
+    "description": "De corte amplio con pinzas delanteras que aportan una mejor caída y un calce elegante. Un diseño atemporal, versátil y cómodo para cualquier ocasión.",
+    "u-min": 10,
+    "image": "../catalogo/f/1-1.webp",
+    "images": ["../catalogo/f/1-1.webp", "../catalogo/f/1-2.webp"],
+    "sexo": "F",
+    "keywords": ["palazzo", "ancho", "sastrero", "elegante", "fluido"]
+  },
+  {
     "id": "a91f3c2d",
     "name": "PANTALÓN PALAZZO",
     "description": "De corte amplio con pinzas delanteras que aportan una mejor caída y un calce elegante. Un diseño atemporal, versátil y cómodo para cualquier ocasión.",
     "u-min": 10,
-    "image": "../catalogo/f/2.webp",
+    "image": "../catalogo/f/2-1.webp",
+    "images": ["../catalogo/f/2-1.webp", "../catalogo/f/2-2.webp"],
     "sexo": "F",
     "keywords": ["palazzo", "ancho", "sastrero", "elegante", "fluido"]
   },
@@ -13,7 +24,8 @@
     "name": "CHOMBA ENTALLADA",
     "description": "De corte moderno y calce favorecedor, ideal para un look prolijo, cómodo y versátil.",
     "u-min": 10,
-    "image": "../catalogo/f/3.webp",
+    "image": "../catalogo/f/3-1.webp",
+    "images": ["../catalogo/f/3-1.webp", "../catalogo/f/3-2.webp"],
     "sexo": "F",
     "keywords": ["chomba", "entallada", "casual", "urbano", "algodon"]
   },
@@ -22,7 +34,8 @@
     "name": "SHORT SASTRERO",
     "description": "De diseño atemporal y terminación cuidada, pensado para ofrecer comodidad, estilo y una caída impecable.",
     "u-min": 10,
-    "image": "../catalogo/f/4.webp",
+    "image": "../catalogo/f/4-1.webp",
+    "images": ["../catalogo/f/4-1.webp"],
     "sexo": "F",
     "keywords": ["short", "sastrero", "verano", "formal", "liviano"]
   },
@@ -31,7 +44,8 @@
     "name": "PANTALÓN BÁSICO",
     "description": "Calce cómodo y diseño atemporal, pensado para acompañar cualquier look con practicidad y estilo.",
     "u-min": 10,
-    "image": "../catalogo/f/5.webp",
+    "image": "../catalogo/f/5-1.webp",
+    "images": ["../catalogo/f/5-1.webp"],
     "sexo": "F",
     "keywords": ["pantalon", "basico", "diario", "comodo", "versatil"]
   },
@@ -40,7 +54,8 @@
     "name": "CAMISA CLÁSICA",
     "description": "Clásico y versátil, confeccionada para brindar comodidad y una caída impecable. Una prenda atemporal que combina elegancia y funcionalidad para cualquier ocasión.",
     "u-min": 10,
-    "image": "../catalogo/f/6.webp",
+    "image": "../catalogo/f/6-1.webp",
+    "images": ["../catalogo/f/6-1.webp", "../catalogo/f/6-2.webp"],
     "sexo": "F",
     "keywords": ["camisa", "clasica", "formal", "oficina", "atemporal"]
   },
@@ -49,7 +64,8 @@
     "name": "BUZO CROP",
     "description": "De calce cómodo y diseño moderno, ideal para crear looks versátiles con un toque actual. Confeccionado para brindar confort y estilo en cualquier ocasión.",
     "u-min": 10,
-    "image": "../catalogo/f/7.webp",
+    "image": "../catalogo/f/7-1.webp",
+    "images": ["../catalogo/f/7-1.webp", "../catalogo/f/7-2.webp"],
     "sexo": "F",
     "keywords": ["buzo", "crop", "moderno", "juvenil", "streetwear"]
   },
@@ -58,7 +74,8 @@
     "name": "BUZO CANGURO",
     "description": "Confeccionado con costuras reforzadas que aportan mayor durabilidad y resistencia. Los pespuntes visibles realzan la calidad de la prenda y suman un acabado moderno y cuidado.",
     "u-min": 10,
-    "image": "../catalogo/f/8.webp",
+    "image": "../catalogo/f/8-1.webp",
+    "images": ["../catalogo/f/8-1.webp", "../catalogo/f/8-2.webp"],
     "sexo": "F",
     "keywords": ["canguro", "hoodie", "abrigo", "costuras", "resistente"]
   },
@@ -67,7 +84,8 @@
     "name": "REMERA BABY TEE",
     "description": "De calce entallado, cómoda y versátil. Un básico moderno que se adapta a cualquier look.",
     "u-min": 10,
-    "image": "../catalogo/f/9.webp",
+    "image": "../catalogo/f/9-1.webp",
+    "images": ["../catalogo/f/9-1.webp", "../catalogo/f/9-2.webp"],
     "sexo": "F",
     "keywords": ["remera", "babytee", "entallada", "basico", "trendy"]
   },
@@ -76,7 +94,8 @@
     "name": "CAMPERA CON CAPUCHA",
     "description": "De diseño versátil, con costuras reforzadas y pespuntes visibles que aportan durabilidad, calidad y una terminación cuidada.",
     "u-min": 10,
-    "image": "../catalogo/f/10.webp",
+    "image": "../catalogo/f/10-1.webp",
+    "images": ["../catalogo/f/10-1.webp"],
     "sexo": "F",
     "keywords": ["campera", "capucha", "invierno", "abrigada", "urbana"]
   },
@@ -85,7 +104,8 @@
     "name": "JOGGING PALAZZO",
     "description": "De corte amplio y caída fluida, diseñado para brindar máxima comodidad sin perder estilo. Un básico versátil y moderno para el día a día.",
     "u-min": 10,
-    "image": "../catalogo/f/11.webp",
+    "image": "../catalogo/f/11-1.webp",
+    "images": ["../catalogo/f/11-1.webp", "../catalogo/f/11-2.webp"],
     "sexo": "F",
     "keywords": ["jogging", "palazzo", "relajado", "confort", "deportivo"]
   },
@@ -94,7 +114,8 @@
     "name": "SHORT DEPORTIVO",
     "description": "de jogging, cómodo y versátil, diseñado para acompañar cada movimiento con libertad y confort.",
     "u-min": 10,
-    "image": "../catalogo/f/12.webp",
+    "image": "../catalogo/f/12-1.webp",
+    "images": ["../catalogo/f/12-1.webp", "../catalogo/f/12-2.webp"],
     "sexo": "F",
     "keywords": ["short", "deportivo", "entrenamiento", "liviano", "movimiento"]
   },
@@ -103,7 +124,8 @@
     "name": "CAMPERA DEPORTIVA",
     "description": "Cómoda y versátil, diseñada para acompañar cada movimiento con estilo y funcionalidad.",
     "u-min": 10,
-    "image": "../catalogo/f/13.webp",
+    "image": "../catalogo/f/13-1.webp",
+    "images": ["../catalogo/f/13-1.webp", "../catalogo/f/13-2.webp"],
     "sexo": "F",
     "keywords": ["campera", "deportiva", "running", "funcional", "liviana"]
   }
